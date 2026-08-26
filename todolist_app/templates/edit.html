@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}
+    <title>Edit Task -Taskmate</title> 
+{% endblock %}
+{% block content %}
+    <div class="container">
+        </br>
+
+        {% if task_obj.manage == request.user %}
+            <form method = "POST" class ="row"> 
+                {%csrf_token %}
+                    <lable class="col-lg-2"></lable>
+                    <input type="text" class="from-control col-lg-6" name="task" placeholder="New Task?" value="{{task_obj.task}}">
+                    <input type="hidden" name="done" value="{{task_obj.done}}">
+                    <button type="submit" class="btn btn-primary col-lg--2">Update Task</button>
+            </form>
+        {% else %}
+        <p>You do not have permission to edit this task.</p>
+        {% endif %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success" role="alert">
+                    {{message}}
+                </div>
+            {% endfor %}
+        {% endif%}
+    </div>
+{% endblock content %}
