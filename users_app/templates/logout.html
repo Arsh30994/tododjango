@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
 
 {% block title %}
     <title>Logout</title>
@@ -7,16 +6,17 @@
 
 {% block content %}
     <div class="container">
-        <h4 class="mt-5">Logged Out of the Taskmate ,  Thankyou for using us!</h4>
+        <h4 class="mt-5">Logged out of Taskmate. Thank you for using us!</h4>
         {% if messages %}
-            {% for message in messages%}
+            {% for message in messages %}
                 <div class="alert alert-info alert-dismissible fade show" role="alert">
                     {{ message }}
-                    <button type = "button" class ="close" data-dismiss="alert" aria-lable="close">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
             {% endfor %}
-        {% endif%}
+        {% endif %}
+        <a href="{% url 'login' %}" class="btn btn-primary mt-3">Login again</a>
     </div>
 {% endblock content %}

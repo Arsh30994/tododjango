@@ -9,23 +9,21 @@
     <div class="container">
         <div class="row mt-5">
             <div class="col mt-4">
-                <img src="{% static 'images/stickynotes.jpg' %}" alt="Notes" width="360" height="250" class="rounded-lg shadow img-fluid">
-            </div>
-            <div class="col-lg-4">              
-                <img src="{% static 'images/stickynotes.jpg' %}" alt="Notes" width="360" height="250" class="rounded-lg shadow img-fluid">
-            </div>
+                <img src="{% static 'css/js/image/stickeynotes.jpg' %}" alt="Notes" width="360" height="250" class="rounded-lg shadow img-fluid">
             </div>
             <div class="col-lg-4">
-                <img src="{% static 'images/stickynotes.jpg' %}" alt="Notes" width="360" height="250" class="rounded-lg shadow img-fluid">
+                <img src="{% static 'css/js/image/stickeynotes.jpg' %}" alt="Notes" width="360" height="250" class="rounded-lg shadow img-fluid">
+            </div>
+            <div class="col-lg-4">
+                <img src="{% static 'css/js/image/stickeynotes.jpg' %}" alt="Notes" width="360" height="250" class="rounded-lg shadow img-fluid">
             </div>
         </div>
         <div class="row mt-5">
             <div class="col-md-6 offset-md-3">
-                <center><p class="h1 text btn-primary"> hello</p></center>
-                <center><p class="mt-3"> hello </p></center>
-                <center><p class="h5"> hello</p></center>
-
-                <center><a href="{% url 'todolist'%}"><button type="button" class="btn btn-primary btn-lg mt-3 shadow">Let's get Started</button></a></center>
+                <center><p class="h1 text-primary">{{ index_text }}</p></center>
+                <center><p class="mt-3">Organize your tasks and stay productive.</p></center>
+                <center><p class="h5">Get started with Taskmate today.</p></center>
+                <center><a href="{% url 'todolist' %}"><button type="button" class="btn btn-primary btn-lg mt-3 shadow">Let's get Started</button></a></center>
             </div>
         </div>
     </div>

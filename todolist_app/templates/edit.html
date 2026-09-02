@@ -1,28 +1,26 @@
 {% extends 'base.html' %}
 {% block title %}
-    <title>Edit Task -Taskmate</title> 
+    <title>Edit Task - Taskmate</title>
 {% endblock %}
 {% block content %}
     <div class="container">
-        </br>
+        <br>
 
-        {% if task_obj.manage == request.user %}
-            <form method = "POST" class ="row"> 
-                {%csrf_token %}
-                    <lable class="col-lg-2"></lable>
-                    <input type="text" class="from-control col-lg-6" name="task" placeholder="New Task?" value="{{task_obj.task}}">
-                    <input type="hidden" name="done" value="{{task_obj.done}}">
-                    <button type="submit" class="btn btn-primary col-lg--2">Update Task</button>
-            </form>
-        {% else %}
-        <p>You do not have permission to edit this task.</p>
-        {% endif %}
         {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-success" role="alert">
-                    {{message}}
+                    {{ message }}
                 </div>
             {% endfor %}
-        {% endif%}
+        {% endif %}
+
+        <form method="POST" class="row">
+            {% csrf_token %}
+            <label class="col-lg-2"></label>
+            <input type="text" class="form-control col-lg-6" name="task" placeholder="Edit Task" value="{{ task_obj.task }}" required>
+            <input type="hidden" name="title" value="{{ task_obj.title }}">
+            <input type="hidden" name="done" value="{{ task_obj.done|yesno:'true,false' }}">
+            <button type="submit" class="btn btn-primary col-lg-2">Update Task</button>
+        </form>
     </div>
 {% endblock content %}

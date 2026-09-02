@@ -14,8 +14,11 @@ from pathlib import Path
 import os
 import environ
 
-env = environ.Env()
-environ.Env.read_env()
+env = environ.Env(
+    DJANGO_DEBUG=(bool, True),
+)
+environ.Env.read_env(os.path.join(Path(__file__).resolve().parent.parent, '.env'))
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,12 +27,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('DJANGO_SECERET_KEY')
+SECRET_KEY = env(
+    'DJANGO_SECRET_KEY',
+    default=env('DJANGO_SECERET_KEY', default='django-insecure-dev-key-change-in-production'),
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DJANGO_DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['localhost', '127.0.0.1', 'testserver'])
 
 
 # Application definition
@@ -62,7 +68,7 @@ ROOT_URLCONF = 'taskmate.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [(os.path.join(BASE_DIR, 'templates'))],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,16 +86,25 @@ WSGI_APPLICATION = 'taskmate.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default':{
-        'ENGINE':'django.db.backends.postgresql',
-        'NAME':env('DJANGO_DB_NAME'),
-        'USER':env('DJANGO_DB_USER'),
-        'PASSWORD':env('DJANGO_DB_PASSWORD'),
-        'HOST':env('DJANGO_DB_HOST'),
-        'PORT':env('DJANGO_DB_PORT'),
+if env('DJANGO_DB_NAME', default=None):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': env('DJANGO_DB_NAME'),
+            'USER': env('DJANGO_DB_USER', default=''),
+            'PASSWORD': env('DJANGO_DB_PASSWORD', default=''),
+            'HOST': env('DJANGO_DB_HOST', default='localhost'),
+            'PORT': env('DJANGO_DB_PORT', default='5432'),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
@@ -125,9 +140,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [(os.path.join(BASE_DIR, 'static'))]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 LOGIN_REDIRECT_URL = 'todolist'
