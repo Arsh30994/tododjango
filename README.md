@@ -85,12 +85,12 @@ The add-task form on `/todolist/` posts the `task` field. If `title` is empty, t
 | `/todolist/pending/<task_id>/` | Login required | Mark pending |
 | `/account/register/` | Public | Register |
 | `/account/login/` | Public | Login |
-| `/account/logout/` | Auth view | Logout (`LogoutView`) |
+| `/account/logout/` | Auth view | Logout (`LogoutView`, POST only; GET returns 405) |
 | `/contact/` | Login required | Contact page |
 | `/about/` | Public | About page |
 | `/admin/` | Staff | Django admin |
 
-After a successful login, Django redirects to `todolist`. After logout, it redirects to `login`. Unauthenticated visits to login-required pages go to `/account/login/`.
+After a successful login, Django redirects to `todolist`. Logout is Django’s `LogoutView` and accepts **POST** only (GET returns HTTP 405). After a successful logout, Django redirects to `login`. Unauthenticated visits to login-required pages go to `/account/login/`.
 
 ## Getting started
 
@@ -102,21 +102,32 @@ After a successful login, Django redirects to `todolist`. After logout, it redir
 
 A `tmenv/` directory is committed from a Windows machine. Ignore it and create a new virtual environment on your system.
 
+On Debian/Ubuntu, `python3 -m venv` needs the `python3-venv` package (`sudo apt install python3.12-venv`). If that package is unavailable, `pip install virtualenv` and `virtualenv .venv` work the same way.
+
 ### Local setup (SQLite)
+
+`requirements.txt` is UTF-16 (saved from Windows). On Linux and macOS, `pip install -r requirements.txt` typically fails with `Invalid requirement`; convert a UTF-8 copy first. On Windows you can install from `requirements.txt` directly.
 
 From the repository root:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+
+# Linux / macOS (UTF-16 → UTF-8). Skip this block on Windows.
+python3 -c "from pathlib import Path; Path('requirements.utf8.txt').write_text(Path('requirements.txt').read_bytes().decode('utf-16'))"
+pip install -r requirements.utf8.txt
+
+# Windows:
+# pip install -r requirements.txt
+
 python manage.py migrate
 python manage.py runserver
 ```
 
 Open [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
 
-A `.env` file is **not** required for local development. Settings fall back to SQLite (`db.sqlite3` in the project root) and a development secret key.
+A `.env` file is **not** required for local development. Settings fall back to SQLite (`db.sqlite3` in the project root) and a development secret key. `requirements.utf8.txt` is a local conversion file; do not commit it.
 
 ### Create an admin user (optional)
 
